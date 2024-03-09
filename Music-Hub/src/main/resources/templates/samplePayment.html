@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Payment</title>
+		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+
+        }
+        h1, h3{
+            color: #6b438e;
+        }
+        h2,p {
+            color: white; 
+        }
+
+        .feature {
+            background-color: #6b438e; /* White background */
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        .feature h2 {
+            margin-top: 0; 
+        }
+
+        .feature p {
+            margin-bottom: 20px;
+        }
+
+        button {
+            color: white; /* White text color for links */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Make link text bold */
+            border: 2px solid white; /* White border */
+            padding: 10px 20px; /* Padding for the link */
+            border-radius: 5px; /* Rounded border */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+            font-size: 15.1px;
+            background-color: #6b438e;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: white; /* White background color on hover */
+            color: #6b438e;
+            border: 2px solid #6b438e;
+        }
+		nav {
+            background-color: #6b438e;
+            padding: 30px 0;
+        }
+    
+        a {
+            color: white; /* White text color for links */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Make link text bold */
+            border: 2px solid white; /* White border */
+            padding: 10px 20px; /* Padding for the link */
+            border-radius: 5px; /* Rounded border */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+            font-size: 15.1px;
+        }
+
+        a:hover {
+            background-color: white; /* White background color on hover */
+            color: #6b438e; 
+        }
+    
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+    
+        li {
+            display: inline;
+            margin-right: 20px;
+        }
+        h1{
+            padding: 30px;
+        }     
+    </style>
+	</head>
+	<body>
+		<nav>
+	        <ul>
+	        	<li><a href="/customerHome">Home</a></li>
+	            <li><a href="/">Logout</a></li>
+	        </ul>
+	    </nav>
+		<div>
+			<h1>Make Payment to Enjoy Unlimited Music</h1>
+	    	<h3>You Can Have the Following Features with Our App:</h3>
+	    
+		    <div class="feature">
+		        <h2>User-Friendly Interface</h2>
+		        <p>Our music application has an intuitive and easy-to-use interface, making it simple for users to navigate, discover new music, and create playlists.</p>
+		    </div>
+		
+		    <div class="feature">
+		        <h2>Vast Music Library</h2>
+		        <p>Highlight the extensive collection of songs and genres available on your platform. Let users know that they can find a wide variety of music to suit their tastes and preferences.</p>
+		    </div>
+		
+		    <div class="feature">
+		        <h2>Affordable Pricing</h2>
+		        <p>If your application offers subscription plans or premium features, highlight the affordability and value users get for their money compared to other similar services.</p>
+		    </div>
+		</div>
+		<div>
+	    	<form id="payment-form">
+		        <button type="submit" class="buy-button" >BUY</button>
+		    </form>
+		</div>
+		
+		<script>
+			$(document).ready(function() 
+			{
+			    $(".buy-button").click(
+			    		function(e) 
+					    {
+					        e.preventDefault();
+					        var form = $(this).closest('form');
+					        createOrder();
+					    });
+			});
+			
+			function createOrder() 
+			{
+			    $.post("/createOrder").done(function(order) {
+			            order = JSON.parse(order);
+			            var options = 
+			            {
+			                "key": "rzp_test_jB2axCZ0QuiqCJ",
+			                "amount": order.amount_due.toString(),
+			                "currency": "INR",
+			                "name": "Tune Hub",
+			                "description": "Test Transaction",
+			                "order_id": order.id,
+			                "handler": function (response) 
+			                {
+			                    verifyPayment(response.razorpay_order_id, response.razorpay_payment_id, response.razorpay_signature);
+			                },
+			                "prefill": 
+			                {
+			                    "name": "Your Name",
+			                    "email": "test@example.com",
+			                    "contact": "9999999999"
+			                },
+			                "notes": { "address": "Your Address" },
+			                "theme": { "color": "#F37254" }
+			            };
+			            var rzp1 = new Razorpay(options);
+			            rzp1.open();
+			        })
+			        .fail(function(error) {
+			            console.error("Error:", error);
+			        });
+			}
+			
+			function verifyPayment(orderId, paymentId, signature) 
+			{
+			     $.post("/verify", { orderId: orderId, paymentId: paymentId, signature: signature })
+			         .done(function(isValid) {
+			             if (isValid) 
+			             {
+			                 alert("Payment successful");
+			                 window.location.href = 'payment-success';
+			             } 
+			             else 
+			             {
+			                 alert("Payment failed");
+			                 window.location.href = 'payment-failure';
+			             }
+			         })
+			         .fail(function(error) { console.error("Error:", error); });
+			}
+		</script>
+	</body>
+</html>

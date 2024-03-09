@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Music App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7; /* Light gray background */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .playlist-card {
+            width: 50%;
+            margin: 20px auto;
+            background-color: #6b438e; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            border-radius: 5px;
+            padding: 20px;
+            text-align: left;
+            color: white;
+        }
+
+        .playlist-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        audio {
+            width: 100%;
+        }
+        
+        nav {
+            background-color: #6b438e;
+            padding: 30px 0;
+        }
+    
+        a {
+            color: white; /* White text color for links */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Make link text bold */
+            border: 2px solid white; /* White border */
+            padding: 10px 20px; /* Padding for the link */
+            border-radius: 5px; /* Rounded border */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+            font-size: 15.1px;
+        }
+
+        a:hover {
+            background-color: white; /* White background color on hover */
+            color: #6b438e; /* Purple text color on hover */
+        }
+    
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+    
+        li {
+            display: inline;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+	<nav>
+        <ul>
+        	<li><a href="/customerHome">Home</a></li>
+            <li><a href="/map-viewSongs">Explore Songs</a></li>
+            <li><a href="/createPlaylist">Create Playlist</a></li>
+            <li><a href="/viewPlaylist">View Playlist</a></li>
+            <li><a href="/">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div th:each="pl : ${playlist}" class="playlist-card">
+        <h1><div class="playlist-name" th:text="${pl.name}"></div></h1>
+        <ul>
+            <li th:each="s : ${pl.song}">
+                <span th:text="${s.name}"></span><br><br>
+                <audio controls>
+                    <source th:src="${s.link}" type="audio/mpeg">
+                </audio>
+                <br><br>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

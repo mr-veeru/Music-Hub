@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Music App</title>
+	    <style>
+	        body {
+	            font-family: Arial, sans-serif;
+	            margin: 0;
+	            padding: 0;
+	            text-align: center;
+	        }
+	
+	        .song-container {
+	            display: flex;
+	            flex-wrap: wrap;
+	            justify-content: center;
+	            margin-top: 20px;
+	            color: white;
+	        }
+	
+	        .song {
+	            width: 300px;
+	            margin: 10px;
+	            padding: 15px;
+	            background-color: #6b438e;
+	            border-radius: 5px;
+	            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	        }
+	
+	        audio {
+	            width: 100%;
+	            margin-top: 10px;
+	        }
+	
+	        nav {
+            background-color: #6b438e;
+            padding: 30px 0;
+            text-align: center;
+	        }
+	    
+	        a {
+	            color: white; /* White text color for links */
+	            text-decoration: none; /* Remove underline */
+	            font-weight: bold; /* Make link text bold */
+	            border: 2px solid white; /* White border */
+	            padding: 10px 20px; /* Padding for the link */
+	            border-radius: 5px; /* Rounded border */
+	            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
+	            font-size: 15.1px;
+	        }
+	
+	        a:hover {
+	            background-color: white; /* White background color on hover */
+	            color: #6b438e; /* Purple text color on hover */
+	        }
+	    
+	        ul {
+	            list-style-type: none;
+	            padding: 0;
+	            margin: 0;
+	        }
+	    
+	        li {
+	            display: inline;
+	            margin-right: 20px;
+	        }
+	        @media screen and (max-width: 800px) {
+	            a {
+	                font-size: 13px;
+	            }
+	        }
+	    </style>
+	</head>
+	<body>
+		<nav>
+            <ul>
+            	<li><a href="/customerHome">Home</a></li>
+                <li><a href="/map-viewSongs">Explore Songs</a></li>
+                <li><a href="/createPlaylist">Create Playlist</a></li>
+                <li><a href="/viewPlaylist">View Playlist</a></li>
+                <li><a href="/">Logout</a></li>
+            </ul>
+        </nav>
+		<div class="song-container">
+		    <!-- Iterate over songs and display them -->
+		    <div th:each="song : ${songsList}" class="song">
+		        <h3 th:text="${song.name}"></h3>
+		        <p th:text="'Artist: ' + ${song.artist}"></p>
+		        <p th:text="'Genre: ' + ${song.genre}"></p>
+		        <audio controls>
+		            <source th:src="${song.link}" type="audio/mpeg">
+		        </audio>
+		    </div>
+		</div>
+	</body>
+</html>
