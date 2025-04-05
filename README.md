@@ -2,7 +2,7 @@
 
 A comprehensive web application for managing and streaming music, built with Spring Boot.
 
-![Music Hub Banner])
+![Music Hub Banner](https://img.shields.io/badge/Music%20Hub-Your%20Music%20Companion-blueviolet)
 
 ## ✨ Features
 
